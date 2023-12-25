@@ -4,6 +4,8 @@ const dotenv = require('dotenv');
 
 const dbConnect = require('./config/database');
 
+const authRouter = require('./routes/authRoute');
+
 dotenv.config({
   path: 'backend/config/config.env',
 });
@@ -14,6 +16,8 @@ app.get('/', (req, res) => {
 });
 
 dbConnect();
+
+app.use('/api/messenger', authRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
