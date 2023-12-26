@@ -3,9 +3,11 @@ const validator = require('validator');
 const registerModel = require('../models/authModel');
 const path = require('path');
 
+const jwt = require('jsonwebtoken');
+//const { options } = require('../routes/authRoute');
+
 const fs = require('fs');
 const bcrypt = require('bcrypt');
-const { exit } = require('process');
 
 module.exports.userRegister = (req, res) => {
   const form = new formidable.IncomingForm();
@@ -98,6 +100,31 @@ module.exports.userRegister = (req, res) => {
                   email: normalizedEmail,
                   password: await bcrypt.hash(normalizedPassword, 10),
                   image: 'abcd',
+                });
+
+                const token = jwt.sign(
+                  {
+                    id: userCreate._id,
+                    email: userCreate.email,
+                    userName: userCreate.userName,
+                    image: userCreate.image,
+                    registerTime: userCreate.createdAt,
+                  },
+                  process.env.SECRET,
+                  {
+                    expiresIn: process.env.TOKEN_EXP,
+                  }
+                );
+
+                const options = {
+                  expires: new Date(
+                    Date.now() + process.env.COOKIE_EXP * 24 * 60 * 60 * 1000
+                  ),
+                };
+
+                res.status(201).cookie('authToken', token, options).json({
+                  successMessage: 'Your Register Successful',
+                  token,
                 });
 
                 console.log('User created successfully:', userCreate);
