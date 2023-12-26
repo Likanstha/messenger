@@ -4,7 +4,6 @@ const registerModel = require('../models/authModel');
 const path = require('path');
 
 const jwt = require('jsonwebtoken');
-//const { options } = require('../routes/authRoute');
 
 const fs = require('fs');
 const bcrypt = require('bcrypt');
