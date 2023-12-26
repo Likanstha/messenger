@@ -6,6 +6,9 @@ const dbConnect = require('./config/database');
 
 const authRouter = require('./routes/authRoute');
 
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+
 dotenv.config({
   path: 'backend/config/config.env',
 });
@@ -17,6 +20,8 @@ app.get('/', (req, res) => {
 
 dbConnect();
 
+app.use(bodyParser.json());
+app.use(cookieParser());
 app.use('/api/messenger', authRouter);
 
 app.listen(PORT, () => {
